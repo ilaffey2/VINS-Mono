@@ -15,6 +15,8 @@ ros::Publisher pub_keyframe_pose;
 ros::Publisher pub_keyframe_point;
 ros::Publisher pub_extrinsic;
 
+ros::Publisher pub_imu_filter;
+
 CameraPoseVisualization cameraposevisual(0, 1, 0, 1);
 CameraPoseVisualization keyframebasevisual(0.0, 0.0, 1.0, 1.0);
 static double sum_of_path = 0;
@@ -35,11 +37,36 @@ void registerPub(ros::NodeHandle &n)
     pub_keyframe_point = n.advertise<sensor_msgs::PointCloud>("keyframe_point", 1000);
     pub_extrinsic = n.advertise<nav_msgs::Odometry>("extrinsic", 1000);
     pub_relo_relative_pose=  n.advertise<nav_msgs::Odometry>("relo_relative_pose", 1000);
+    pub_imu_filter = n.advertise<sensor_msgs::Imu>("imu_filtered", 1000);
 
     cameraposevisual.setScale(1);
     cameraposevisual.setLineWidth(0.05);
     keyframebasevisual.setScale(0.1);
     keyframebasevisual.setLineWidth(0.01);
+}
+
+void processIMU(const sensor_msgs::Imu::ConstPtr& imu_msg)
+{
+    static imu_tools::ImuFilterMadgwick imu_filter;
+
+    // Initialize the filter if it hasn't been initialized yet
+    if (!imu_filter.getInitialized())
+    {
+        imu_filter.setParameters(1.0, 0.1);
+        imu_filter.setWorldFrame("world");
+        imu_filter.initialize(*imu_msg);
+        return;
+    }
+
+    // Update the filter with the new IMU data
+    imu_filter.update(*imu_msg);
+
+    // Publish the filtered IMU data
+    sensor_msgs::Imu imu_filtered;
+    imu_filtered.header = imu_msg->header;
+    imu_filtered.orientation = imu_filter.getOrientation();
+
+    pub_imu_filter.publish(imu_filtered);
 }
 
 void pubLatestOdometry(const Eigen::Vector3d &P, const Eigen::Quaterniond &Q, const Eigen::Vector3d &V, const std_msgs::Header &header)
