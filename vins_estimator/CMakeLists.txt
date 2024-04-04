@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
     tf
     cv_bridge
     visualization_msgs
-    imu_tools
+    imu_filter_madgwick
     )
 
 find_package(OpenCV REQUIRED)
@@ -30,7 +30,6 @@ find_package(Eigen3)
 include_directories(
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
-  ${imu_tools_INCLUDE_DIRS}
 )
 
 catkin_package()

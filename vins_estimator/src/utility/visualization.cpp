@@ -1,5 +1,5 @@
 #include "visualization.h"
-#include <imu_tools/imu_filter_madgwick.h>
+#include <imu_filter_madgwick/imu_filter.h>
 #include <sensor_msgs/Imu.h>
 
 using namespace ros;
