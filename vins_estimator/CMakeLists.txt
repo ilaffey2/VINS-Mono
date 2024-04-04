@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
     tf
     cv_bridge
     visualization_msgs
-    imu_filter_madgwick
+    imu_tools
     )
 
 find_package(OpenCV REQUIRED)
@@ -53,6 +53,6 @@ add_executable(vins_estimator
     )
 
 
-target_link_libraries(vins_estimator ${catkin_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES}) 
+target_link_libraries(vins_estimator ${catkin_LIBRARIES} ${OpenCV_LIBS} ${CERES_LIBRARIES} imu_filter_madgwick) 
 
 
