@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
     tf
     cv_bridge
     visualization_msgs
-    imu_tools
+    imu_filter_madgwick
     )
 
 find_package(OpenCV REQUIRED)
