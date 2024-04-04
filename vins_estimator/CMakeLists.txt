@@ -32,8 +32,12 @@ include_directories(
   ${EIGEN3_INCLUDE_DIR}
 )
 
-catkin_package()
-
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES ${PROJECT_NAME}
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs tf cv_bridge visualization_msgs imu_tools
+  DEPENDS OpenCV Ceres Eigen3
+)
 add_executable(vins_estimator
     src/estimator_node.cpp
     src/parameters.cpp
